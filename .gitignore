@@ -1,0 +1,11 @@
+# IntelliJ
+.idea
+*.iml
+
+# rvm
+.ruby-version
+.ruby-gemset
+
+# Gems
+Gemfile.lock
+pkg
