@@ -29,6 +29,10 @@ module SshShort
       if node[:key].nil? or args[:force_key_prompt]
         node[:key] = key_set.prompt_for_key
       end
+      if node[:user].nil?
+        abort 'No user was provided and no default is set' unless config[:default_user]
+        node[:user] = config[:default_user]
+      end
       node = CLI.add_options_if_present(node, args, [:alias, :user])
 
       node_mapper.update_node(node)

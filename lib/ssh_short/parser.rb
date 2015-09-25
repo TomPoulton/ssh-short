@@ -18,7 +18,7 @@ module SshShort
       options = self.key_options args, {}
       options = self.alias_option args, options
       options = self.action_options args, options
-      options = self.user_options args, options, config[:default_user]
+      options = self.user_options args, options
       options = self.node_options args, options, config[:ip_mask]
       options
     end
@@ -40,14 +40,11 @@ module SshShort
       options
     end
 
-    def self.user_options(args, options, default_user)
+    def self.user_options(args, options)
       user_index = args.index('-u')
       if user_index
         options[:user] = args[user_index + 1]
         2.times { args.delete_at user_index }
-      else
-        abort 'No user was provided and no default is set' unless default_user
-        options[:user] = default_user
       end
       options
     end

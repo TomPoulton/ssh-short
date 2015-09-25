@@ -91,23 +91,11 @@ describe SshShort::Parser do
 
     context 'when no user is provided' do
 
-      it 'uses the default user from config' do
+      it 'leaves the user unset' do
         options = SshShort::Parser.parse_input(config, standard_args)
-        expect(options[:user]).to eq 'user'
+        expect(options).to_not include(:user)
       end
 
-      context 'and when config user is null' do
-
-        let(:no_user_config) { config.delete_if{|k, v| k == :default_user} }
-
-        it 'aborts with error message' do
-          expect {
-            expect {
-              SshShort::Parser.parse_input(no_user_config, standard_args)
-            }.to raise_error SystemExit
-          }.to output(/No user was provided/).to_stderr
-        end
-      end
     end
 
     context 'when a user is provided' do
