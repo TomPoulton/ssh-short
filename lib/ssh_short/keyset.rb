@@ -14,6 +14,7 @@ module SshShort
       abort "Error: No keys found in #{@keys_dir}" unless keys.count > 0
 
       key_names = keys.collect { |key| File.basename key }
+      key_names.unshift 'id_rsa'
 
       puts 'Select a key:'
       key_names.each_with_index { |key_name, i| puts "#{i}) #{key_name}" }
@@ -25,7 +26,8 @@ module SshShort
     end
 
     def get_key(key_name)
-      key = "#{@keys_dir}/#{key_name}"
+      key = key_name.eql?('id_rsa') ? '~/.ssh/id_rsa' : "#{@keys_dir}/#{key_name}"
+      key = File.expand_path(key)
       abort "Error: Cannot find #{key}" unless File.exist? key
       key
     end
