@@ -69,12 +69,15 @@ You can override the user for a node, see args section below
 When you connect to a host for the first time with ssh-short, it will scan your `keys_dir`
 and present you with a list of numbered keys:
 
+**Update:** As of version 0.2.0 your default SSH Key (`id_rsa`) can now be used and will be presented as option `0`
+
 ```
 user@localhost $ sshort 16
 Select a key:
-0) Dev.pem
-1) Test.pem
-2) Admin.pem
+0) id_rsa
+1) Dev.pem
+2) Test.pem
+3) Admin.pem
 ```
 
 Simply type the number of the key and press enter. ssh-short will connect you via `ssh`, 
@@ -114,7 +117,8 @@ This forces an update to the key for a node and you will be presented with the l
 ```
 user@localhost $ sshort 16 -k
 Select a key:
-0) Dev.pem
+0) id_rsa
+1) Dev.pem
 ...
 ```
 
