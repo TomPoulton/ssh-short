@@ -9,11 +9,7 @@ module SshShort
     end
 
     def prompt_for_key
-      abort "Error: Cannot find keys directory at #{@keys_dir}" unless File.exist? @keys_dir
-      keys = Dir.glob("#{@keys_dir}/*").select{ |e| File.file? e }
-      abort "Error: No keys found in #{@keys_dir}" unless keys.count > 0
-
-      key_names = keys.collect { |key| File.basename key }
+      key_names = find_keys.collect { |key| File.basename key }
       key_names.unshift 'id_rsa'
 
       puts 'Select a key:'
@@ -26,10 +22,28 @@ module SshShort
     end
 
     def get_key(key_name)
-      key = key_name.eql?('id_rsa') ? '~/.ssh/id_rsa' : "#{@keys_dir}/#{key_name}"
-      key = File.expand_path(key)
+      if key_name.eql?('id_rsa')
+        key = File.expand_path('~/.ssh/id_rsa')
+      else
+        keys = find_keys.select { |path| File.basename(path) == key_name }
+        abort "Error: More than one key found called #{key_name}" if keys.count > 1
+        key = keys.first
+      end
+      # key = File.expand_path(key)
       abort "Error: Cannot find #{key}" unless File.exist? key
       key
+    end
+    
+    def find_keys
+      abort "Error: Cannot find keys directory at #{@keys_dir}" unless File.exist? @keys_dir
+      
+      # Recursively search directory, including following symlinks
+      search_string = "#{File.expand_path(@keys_dir)}/**{,/*/**}/*"
+      
+      keys = Dir.glob(search_string).select { |e| File.file? e }
+      abort "Error: No keys found in #{@keys_dir}" unless keys.count > 0
+      
+      keys
     end
 
   end

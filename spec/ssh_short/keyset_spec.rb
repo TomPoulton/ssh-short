@@ -4,7 +4,12 @@ require 'ssh_short/keyset'
 describe SshShort::KeySet do
 
   let(:keys_dir) { '/path/to/keys' }
-  let(:keys) { [ 'key_a.pem', 'key_b.pem', 'key_c.pem', 'key_d.pem' ] }
+  let(:keys) { [
+      "#{keys_dir}/dir_a/key_a.pem",
+      "#{keys_dir}/dir_a/key_b.pem",
+      "#{keys_dir}/dir_b/key_c.pem",
+      "#{keys_dir}/dir_b/key_d.pem"
+  ] }
 
   subject(:key_set) { SshShort::KeySet.new keys_dir }
 
@@ -33,18 +38,15 @@ describe SshShort::KeySet do
         result = key_set.prompt_for_key
         expect(result).to eq 'id_rsa'
       end
-
     end
-
-
   end
 
   describe 'get_key' do
 
     it 'returns the key path from the name' do
-      key_name = 'key_c.pem'
+      key_name = File.basename keys[2] #key_c.pem
       result = key_set.get_key key_name
-      expect(result).to eq "#{keys_dir}/#{key_name}"
+      expect(result).to eq keys[2]
     end
 
     context 'when the default key name is provided' do
@@ -55,8 +57,6 @@ describe SshShort::KeySet do
       end
 
     end
-
-
   end
 
 end
