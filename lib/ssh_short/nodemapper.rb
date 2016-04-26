@@ -22,8 +22,7 @@ module SshShort
     end
 
     def update_node(node)
-      alias_changed = alias_changed? node
-      if alias_changed
+      if alias_changed? node
         existing_node_with_alias = get_node_by_alias(node[:alias])
         if existing_node_with_alias
           puts "Moving alias #{node[:alias]} from #{existing_node_with_alias[:host]} to #{node[:host]}"
@@ -55,6 +54,7 @@ module SshShort
     private
 
     def alias_changed?(node)
+      return false unless node[:alias]
       old_node = get_node_by_host node[:host]
       old_node ? old_node[:alias] != node[:alias] : true
     end

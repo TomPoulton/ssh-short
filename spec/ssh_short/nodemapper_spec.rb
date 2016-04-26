@@ -141,6 +141,23 @@ describe SshShort::NodeMapper do
 
     end
 
+    context 'when alias is nil' do
+
+      let(:node) { {:host => '10.0.0.6', :key => 'key_for_6.pem'} }
+      let(:nodemap) {
+        [
+            {:host => '10.0.0.1', :alias => 'alice', :key => 'key_for_alice.pem'},
+            {:host => '10.0.0.2', :key => 'key_for_2.pem'},
+        ]
+      }
+
+      it 'does not move the empty alias' do
+        expect(nodemapper).to_not receive(:puts).with(/Moving alias/)
+        nodemapper.update_node(node)
+      end
+
+    end
+
   end
 
   describe 'get_aliases' do
